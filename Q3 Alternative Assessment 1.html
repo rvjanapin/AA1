@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Javascript Alternative Exercise</title>
+		<!--
+		
+		Instructions:
+			
+		Shown below is an HTML file that acts as a selector. A user is to indicate the row and column of the pokemon he wishes to select. The selected pokemon will be shown in the larger display image. A pokemon can be unselected by selecting the pokemon again. A user can choose up to 3 pokemon. The pokemon of various regions can be toggled by using the corresponding buttons.
+		
+		The HTML has some unique arrangements. Note the following:
+		
+			- each <tr> row corresponds to a specific region and has a corresponding ID
+			- the following elements have their own unique ID which you can use in the javascript:
+				> all buttons
+				> both number inputs
+				> main display
+			- there are specific CSS classes for various conditions such as:
+				> active: the button has been toggled
+				> selected: the pokemon has been selected
+				> display-region: the button of the corresponding region has been toggled
+				
+		Implement the following functionalities using javascript:
+		
+			- Region filter: clicking the button either hides or displays the pokemon from the indicated region and changes the color of the button to red. (10pts)
+				> write a function for each region button (3pts)
+				> check if the button is already using the "active" class (1pt)
+				>> if yes, remove the "active" class and remove the "display-region" from the corresponding <tr> element (3pts)
+				>> if no, apply the "active" class to the button and apply the "display-region" class to the corresponding <tr> element (3pts)
+			
+			- Pokemon selector: inputting the row and column selects the pokemon in the indicated cell and shows it in the main display. Selecting a previously selected pokemon unselects it. Up to three can be selected at a time. (20pts)
+				> write a function for the button (1pt)
+				> get the row and column values from the input elements (2pts)
+				> check if the input value for the row and column are valid given the dimensions of the table (2pts)
+				>> if invalid, display an alert that tells the user about the invalid input (2pts)
+				>> if valid, get the corresponding <td> element (2pts)
+				>> check if the td element has the class "selected" applied (1pt)
+				>>> if no, check if the chosen pokemon has exceeded 3 (1pt)
+				>>>> if no,
+				>>>>> apply the class selected to the specified <td> element (1pt)
+				>>>>> increment the value of chosen by 1 (1pt)
+				>>>>> get the src of the image inside the specified <td> and apply it to the main "display" image (3pts)
+				>>>> if yes (chosen exceeded 3), display an alert that indicates 3 have already been selected (1pt)
+				>>> if yes (<td> doesn't have the class selected)
+				>>>> remove the class selected from the specified <td> (1pt)
+				>>>> decrement the value of chosen by 1 (1pt)
+				>>>> clear the src of the main display image (1pt)
+			
+			Additionally, your code writing will be evaluated with the following criteria:
+			
+				- naming conventions (3pts)
+				- code formatting (3pts)
+				- comments for documentation and understanding (4pts)
+			
+			Bonus: complete the functionalities entirely from an external JS (3pts)
+			
+			Some useful properties and methods:
+			
+			document.getElementById()
+			document.getElementsByTagName()
+			<element>.className
+			<element>.style
+			<element>.value
+			<element>.src
+			
+		-->
+		<style>
+			td{
+				border: 1px solid black;
+			}
+			#display{
+				display: block;
+				border: 1px solid black;
+				margin: 20px auto;
+				width: 200px;
+				height: 200px;
+			}
+			td img{
+				height: 100px;
+				width: 100px;
+			}
+			table{
+				border-collapse: collapse;
+				margin: auto;
+			}
+			tr{
+				visibility: hidden;
+			}
+			.display-region{
+				visibility: visible;
+			}
+			.active{
+				background-color: red;
+			}
+			#options{
+				width: 400px;
+				margin: auto;
+				text-align: center
+			}
+			.btn-group{
+				margin: auto;
+			}
+			.selected{
+				background-color: orange;
+			}
+			button{
+				margin: 10px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<img id="display">
+		<table id="table">
+			<tr id="kanto">
+				<td id="a1"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/001.png"/></td>
+				<td id="a2"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/004.png"/></td>
+				<td id="a3"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/007.png"/></td>
+			</tr>
+			<tr id="johto">
+				<td id="b1"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/152.png"/></td>
+				<td id="b2"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/155.png"/></td>
+				<td id="b3"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/158.png"/></td>
+			</tr>
+			<tr id="hoenn">
+				<td id="c1"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/252.png"/></td>
+				<td id="c2"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/255.png"/></td>
+				<td id="c3"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/258.png"/></td>
+			</tr>
+			<tr id="sinnoh">
+				<td id="d1"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/387.png"/></td>
+				<td id="d2"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/390.png"/></td>
+				<td id="d3"><img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/393.png"/></td>
+			</tr>
+		</table>
+		<div id="options">
+			<div class="btn-group">
+				<button id="kanto-btn" onclick="kanto()">Kanto</button>
+				<button id="johto-btn" onclick="johto()">Johto</button>
+				<button id="hoenn-btn" onclick="hoenn()">Hoenn</button>
+				<button id="sinnoh-btn" onclick="sinnoh()">Sinnoh</button>
+			</div>
+			<div>
+				<p>Row:</p>
+				<input id="row" type="number"/>
+				<p>Column:</p>
+				<input id="col" type="number"/>
+			</div>
+			<button id="select" onclick="select()">select</button>
+		</div>
+		<script src="script.js"></script>
+	</body>
+</html>
